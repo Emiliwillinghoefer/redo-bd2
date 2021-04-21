@@ -3,21 +3,19 @@ import re
 
 def conexao():
     connection = psycopg2.connect(user="postgres",
-                                password="admin",
-                                host="127.0.0.1",
-                                port="5432",
-                                database="redobd")
+                                  password="admin",
+                                  host="127.0.0.1",
+                                  port="5432",
+                                  database="postgres")
 
-# CREATE TABLE test (id integer primary key, a int, b int, c int);
-# INSERT INTO test (id, a, b, c) VALUES (1, 2, 3, 4);
-# UPDATE test SET a=2, b=3, c=4 WHERE id = 1
-# Getting the kets and values
+    cursor = connection.cursor()
+    return cursor
 
 def create_table(variaveis):
 
+    cursor = conexao()
     columns = variaveis.keys()
     values = variaveis.values()
-    # Create the columns for insert table
     create_query_columns = []
     for column in columns:
         create_query_columns.append(column + " int")
@@ -25,10 +23,13 @@ def create_table(variaveis):
     create_query_columns = ", ".join(create_query_columns)
     
     create_query = "CREATE TABLE test (id integer primary key, " + create_query_columns + ")"
+    cursor.execute(create_query)
+    cursor.close()
     return print("\n", create_query)
 
 
 def inserting_table(variaveis):
+    cursor = conexao()
     columns = variaveis.keys()
     values = variaveis.values()
     str_values = []
@@ -38,12 +39,13 @@ def inserting_table(variaveis):
 
     insert_query = "INSERT INTO test (id, " + ", ".join(columns) + ") "
     insert_query += "VALUES (1, "+ ", ".join(str_values) + ")"
+    cursor.execute(insert_query)
+    cursor.commit()
+    cursor.close()
     return print("\n", insert_query)
 
-
-# Update table
 def update_table(variaveis):
-
+    cursor = conexao()
     id = 1
     columns = variaveis.keys()
 
@@ -54,9 +56,13 @@ def update_table(variaveis):
     print(new_values)
     new_values = ", ".join(new_values)
     update_query = "UPDATE test SET " + new_values + " WHERE id = " + str(id)
+    cursor.execute(insert_query)
+    cursor.commit()
+    cursor.close()
     return print(update_query)
 
 def log():
+    
     arquivo = open('teste_final', 'r')
     #Cada linha do arquivo fica em um índice diferente
     arquivolist = list(arquivo)     
@@ -116,8 +122,7 @@ def log():
 
     print("Resultado:", variaveis)
     update_table(variaveis)
+
     arquivo.close()
-
-
 
 log()

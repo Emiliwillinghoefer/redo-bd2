@@ -26,31 +26,27 @@ def create_table(colunas):
     print("Result ", record)
 
 
-
-
-
 def valida_log():
 
-    arquivo = open('teste02-2 (1)', 'r')
+    arquivo = open('teste03', 'r') 
     arquivolist = list(arquivo)     #cria uma lista com o .txt
     REDO = []                       #salva quem vai ser feito REDO
 
-    #Variaveis p/ identificar se existe no .txt
-    checkvalue = re.compile(r'T[0-9]*,', re.IGNORECASE) #re.IGNORECASE -> ignorar maiuscula ou minuscula
-    commit = re.compile(r'commit', re.IGNORECASE) #re.IGNORECASE -> ignorar se maiuscula ou minuscula
-    extracT = re.compile(r'(?!commit\b)(?!CKPT\b)(?!Start\b)\b\w+', re.IGNORECASE) #Ignora as palavras descritas e coloca as demais em uma lista com .findall
-    words = re.compile(r'\w+', re.IGNORECASE)   #Utilizado p/ pegar o valor das variaveis
+    checkvalue = re.compile(r'T[0-9]*,', re.IGNORECASE) 
+    commit = re.compile(r'commit', re.IGNORECASE) 
+    extracT = re.compile(r'(?!commit\b)(?!CKPT\b)(?!Start\b)\b\w+', re.IGNORECASE) 
+    words = re.compile(r'\w+', re.IGNORECASE)   
 
     valores = words.findall(arquivolist[0])
     variaveis = {}
-    for i in range(0,len(valores),2): #Iniciar primeiros valores das variáveis (A B C...)
+    for i in range(0,len(valores),2): 
         variaveis[valores[i]]= valores[i+1]
     del valores
     print("", variaveis)
     end = 0
     create_table(variaveis)
-    for linha in reversed(arquivolist): #Verificar os casos e criar as listas de REDO
-        if commit.search(linha):  #Procura commit
+    for linha in reversed(arquivolist): 
+        if commit.search(linha):  
             REDO.append(extracT.findall(linha)[0])
         
 
