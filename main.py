@@ -9,50 +9,38 @@ def conexao():
                                   database="bancodedados")
 
     cursor = connection.cursor()
-    return cursor, connection
+    return cursor
 
 def create_table(variaveis):
 
-    cursor, connection = conexao()
+    cursor = conexao()
     columns = variaveis.keys()
     values = variaveis.values()
     create_query_columns = []
-    print("entrou aqui")
-    #create_statics = "DROP TABLE IF EXISTS teste; CREATE TABLE teste(id int primary key);"
-    #cursor.execute(create_statics)
-    #print(create_statics)
     for column in columns:
         create_query_columns.append(column + " int")
-        print(columns)
-    create_query_columns = ", " . join(create_query_columns)
-    '''for i in columns:
-        create_query = "ALTER TABLE teste ADD COLUMN, "+ list(columns.keys()) + ";"
-        cursor.execute(create_query)
-        cursor.execute("SELECT * FROM teste;")'''
-    print('CRIACAO COLUNAS', create_query_columns)
-    create_query = "DROP TABLE IF EXISTS teste; CREATE TABLE teste(id int primary key not null, " + create_query_columns + " ); "
-    print(create_query)
+    
+    create_query_columns = ", ".join(create_query_columns)
+    
+    create_query = "CREATE TABLE test (id integer primary key, " + create_query_columns + ")"
     cursor.execute(create_query)
-    connection.commit()
-    cursor.execute("SELECT * FROM TESTE;")
     cursor.close()
     return print("\n", create_query)
 
 
 def inserting_table(variaveis):
-    cursor, connection = conexao()
-    columns = variaveis.keys()  
+    cursor = conexao()
+    columns = variaveis.keys()
     values = variaveis.values()
     str_values = []
     for value in values:
         str_values.append(str(value))
     # str_values = [str(value) for value in values]
 
-    insert_query = "INSERT INTO teste (id, " + ", ".join(columns) + ") "
+    insert_query = "INSERT INTO test (id, " + ", ".join(columns) + ") "
     insert_query += "VALUES (1, "+ ", ".join(str_values) + ")"
-    print(insert_query)
     cursor.execute(insert_query)
-    connection.commit()
+    cursor.commit()
     cursor.close()
     return print("\n", insert_query)
 
@@ -67,7 +55,7 @@ def update_table(variaveis):
 
     print(new_values)
     new_values = ", ".join(new_values)
-    update_query = "UPDATE teste SET " + new_values + " WHERE id = " + str(id)
+    update_query = "UPDATE test SET " + new_values + " WHERE id = " + str(id)
     cursor.execute(insert_query)
     cursor.commit()
     cursor.close()
@@ -136,5 +124,5 @@ def log():
     update_table(variaveis)
 
     arquivo.close()
-    
+
 log()
