@@ -27,7 +27,7 @@ A=32 | B=30 | C=90 | D=40 | E=28 | F=2 | X=0 | W=0
 <T7,1,B,30>
 <Start CKPT(T7)>
 <commit T7>
-<End CKPT>O gui
+<End CKPT>
 <start T8>
 <T8,1,X,30>
 <start T9>
