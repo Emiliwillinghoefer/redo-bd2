@@ -20,7 +20,6 @@ def create_table(variaveis):
     for column in columns:
         create_query_columns.append(column + " int")
     create_query_columns = ", " . join(create_query_columns)
-
     create_query = "DROP TABLE IF EXISTS teste; "
     cursor.execute(create_query)
     create_query = "CREATE TABLE teste(id int primary key not null, " + create_query_columns + " ); "
@@ -85,9 +84,9 @@ def log():
 
     indexEnd = 0
     indexStart = 0
-    commitAntes = []
     commitEntre = []
     commitDepois = []
+ 
 
     #Procura o Start CKPT e o End CKPT e guarda os índices
     for i in range(0, len(arquivolist), 1):
@@ -96,21 +95,16 @@ def log():
         if endCheckpoint.search(arquivolist[i]):
             indexEnd = i
     
-    #Procura todos os commits antes do Start CKPT e guarda a transação
-    for i in range(0, indexStart):
-        if commit.search(arquivolist[i]):
-            commitAntes.append(extracT.findall(arquivolist[i])[0])
-    
+   
     #Procura todos os commits entre o Start e o End e guarda a transação
     for i in range(indexStart, indexEnd):
         if commit.search(arquivolist[i]):
             commitEntre.append(extracT.findall(arquivolist[i])[0])
-
-    #Procura todos os commits depois do End CKPT e guarda a transação
+    
     for i in range(indexEnd, len(arquivolist)):
         if commit.search(arquivolist[i]):
             commitDepois.append(extracT.findall(arquivolist[i])[0])
-    
+   
     #print("Commit Antes: ", commitAntes)
     print("\nR E D O: ", commitEntre,"\n") #Será o nosso REDO
     #print("Commit Depois: ", commitDepois)
@@ -118,9 +112,11 @@ def log():
         linha = arquivolist[j]
         if (checkvalue.search(linha)):
             match = (extracT.findall(linha))
-            if(match[0] in commitEntre and variaveis[match[2]] != match[3]):
+            if(match[0] in commitEntre  and variaveis[match[2]] != match[3]):
                 variaveis[match[2]] = match[3]
-
+            if(match[0] in commitDepois  and variaveis[match[2]] != match[3]):
+                variaveis[match[2]] = match[3]
+                print("variaveis", variaveis)
     update_table(variaveis)
     arquivo.close()
     
